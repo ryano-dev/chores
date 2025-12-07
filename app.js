@@ -21,23 +21,50 @@ function saveState(s) {
 }
 
 function createDefaultState() {
-    const defaultChores = [
-        'Make bed',
-        'Brush teeth',
-        'Get dressed',
-        'Tidy room',
-        'Feed pet'
-    ];
-    const kids = {};
-    CHILDREN.forEach(name => {
-        kids[name] = defaultChores.slice();
-    });
     const state = {
-        kids,
-        completed: {}, // { 'YYYY-MM-DD': {Angus:[indexes], ...}}
-        lastReset: (new Date()).toISOString(),
-        pin: DEFAULT_PIN
-    };
+              "kids": {
+                "Angus": [
+                  "Make bed",
+                  "Tidy room",
+                  "Brush teeth & hair",
+                  "Dog water or Toilet rolls",
+                  "Pack bag"
+                ],
+                "Flynn": [
+                  "Make bed",
+                  "Tidy room",
+                  "Brush teeth & hair",
+                  "Toilet rolls or dog water",
+                  "Pack bag"
+                ],
+                "Ashton": [
+                  "Make bed",
+                  "Tidy room & feed fish",
+                  "Brush teeth & hair",
+                  "Feed birds",
+                  "Pack dish washer",
+                  "Pack bag"
+                ],
+                "Logan": [
+                  "Make bed",
+                  "Tidy room",
+                  "Eat Breakfast",
+                  "Brush teeth & hair",
+                  "Make Mum cup of tea",
+                  "Empty dish washer",
+                  "Pack bag"
+                ]
+              },"completed": {
+                "2025-12-07": {
+                  "Angus": [],
+                  "Flynn": [],
+                  "Ashton": [],
+                  "Logan": []
+                }
+              },
+              "lastReset": "2025-12-07T11:12:22.319Z",
+              "pin": "1234"
+            };
     saveState(state);
     return state;
 }
@@ -285,7 +312,7 @@ function setupAdminPage() {
     document.getElementById('wipeBtn').addEventListener('click', () => {
         if (confirm('Wipe all saved data? This cannot be undone.')) {
             localStorage.removeItem(STORAGE_KEY);
-            location.reload();
+            location.href = "index.html";
         }
     });
 }

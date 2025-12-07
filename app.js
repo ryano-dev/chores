@@ -200,7 +200,15 @@ function renderKids() {
 
             item.appendChild(check);
             item.appendChild(text);
-            item.addEventListener('click', () => toggleComplete(child, idx));
+            item.addEventListener('click', () => {                 
+                if(!item.classList.contains('done')){
+                    showStarAnimation(item);
+                    setTimeout(() => { toggleComplete(child, idx); }, 600); 
+                }
+                else{
+                    toggleComplete(child, idx);
+                }
+            });
 
             list.appendChild(item);
         });
@@ -332,6 +340,26 @@ function renderTaskListAdmin() {
         row.appendChild(btn);
         list.appendChild(row);
     });
+}
+
+function showStarAnimation(parentElement) {
+    const star = document.createElement("div");
+    star.className = "star-burst";
+    star.textContent = "⭐";
+
+    // Position the star in the center of the chore item
+    const rect = parentElement.getBoundingClientRect();
+
+    star.style.left = rect.width / 2 - 20 + "px";
+    star.style.top = rect.height / 2 - 20 + "px";
+
+    parentElement.style.position = "relative";
+    parentElement.appendChild(star);
+
+    // Remove the star after animation ends
+    setTimeout(() => {
+        star.remove();
+    }, 600);
 }
 
 (function init() {

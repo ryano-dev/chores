@@ -1,0 +1,44 @@
+{
+  "kids": {
+    "Angus": [
+      "Make bed",
+      "Tidy room",
+      "Brush teeth & hair",
+      "Dog water or Toilet rolls",
+      "Pack bag"
+    ],
+    "Flynn": [
+      "Make bed",
+      "Tidy room",
+      "Brush teeth & hair",
+      "Toilet rolls or dog water",
+      "Pack bag"
+    ],
+    "Ashton": [
+      "Make bed",
+      "Tidy room & feed fish",
+      "Brush teeth & hair",
+      "Feed birds",
+      "Pack dish washer",
+      "Pack bag"
+    ],
+    "Logan": [
+      "Make bed",
+      "Tidy room",
+      "Eat Breakfast",
+      "Brush teeth & hair",
+      "Make Mum cup of tea",
+      "Empty dish washer",
+      "Pack bag"
+    ]
+  },"completed": {
+    "2025-12-07": {
+      "Angus": [],
+      "Flynn": [],
+      "Ashton": [],
+      "Logan": []
+    }
+  },
+  "lastReset": "2025-12-07T11:12:22.319Z",
+  "pin": "1234"
+}

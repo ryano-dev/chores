@@ -1,0 +1,65 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chore Admin</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="admin-wrap">
+        <header>
+            <h1>Admin</h1>
+            <button id="backBtn">⬅ Back</button>
+        </header>
+
+
+        <section id="lockSection">
+            <label for="pinInput">Enter PIN</label>
+            <input id="pinInput" type="password" inputmode="numeric" maxlength="8" />
+            <button id="unlockBtn">Unlock</button>
+            <div id="lockMsg" class="note"></div>
+        </section>
+
+
+        <section id="adminPanel" hidden>
+            <div class="row">
+                <label for="childSelect">Select child</label>
+                <select id="childSelect"></select>
+            </div>
+
+
+            <div class="row">
+                <label for="newTaskInput">New chore (press Add)</label>
+                <input id="newTaskInput" placeholder="e.g. Make bed" />
+                <button id="addTaskBtn">Add</button>
+            </div>
+
+
+            <div id="taskList" class="task-list"></div>
+
+
+            <hr />
+            <div class="row">
+                <label for="pinSet">Change PIN</label>
+                <input id="pinSet" type="password" maxlength="8" />
+                <button id="setPinBtn">Set PIN</button>
+            </div>
+
+
+            <div class="row">
+                <button id="exportBtn">Export Data (JSON)</button>
+                <button id="importBtn">Import Data</button>
+                <input type="file" id="importFile" accept="application/json" style="display:none" />
+            </div>
+
+
+            <div class="row">
+                <button id="wipeBtn" class="danger">Wipe All Data</button>
+            </div>
+        </section>
+
+
+        <script src="app.js"></script>
+</body>
+</html>

@@ -51,11 +51,13 @@ function createDefaultState() {
                     "Tidy room",
                     "Brush teeth & hair",
                     "Dog water or Toilet rolls",
-                    "Pack bag"
+                    "Pack bag",
+                    "Hug mum, tell her to have a good day"
                 ],
                 afternoon: [
                     "Do some homework",
-                    "Empty your bag"
+                    "Empty your bag",
+                    "Tell mum about your day"
                 ]
             },
             Flynn: {
@@ -64,11 +66,13 @@ function createDefaultState() {
                     "Tidy room",
                     "Brush teeth & hair",
                     "Toilet rolls or dog water",
-                    "Pack bag"
+                    "Pack bag",
+                    "Hug mum, tell her to have a good day"
                 ],
                 afternoon: [
                     "Do some homework",
-                    "Empty your bag"
+                    "Empty your bag",
+                    "Tell mum about your day"
                 ]
             },
             Ashton: {
@@ -78,11 +82,13 @@ function createDefaultState() {
                     "Brush teeth & hair",
                     "Feed birds",
                     "Pack dish washer",
-                    "Pack bag"
+                    "Pack bag",
+                    "Hug mum, tell her to have a good day"
                 ],
                 afternoon: [
                     "Do some homework",
-                    "Feed dogs"
+                    "Feed dogs",
+                    "Tell mum about your day"
                 ]
             },
             Logan: {
@@ -92,11 +98,13 @@ function createDefaultState() {
                     "Brush teeth & hair",
                     "Make Mum cup of tea",
                     "Empty dish washer",
-                    "Pack bag"
+                    "Pack bag",
+                    "Hug mum, tell her to have a good day"
                 ],
                 afternoon: [
                     "Do some homework",
-                    "Empty bins"
+                    "Empty bins",
+                    "Tell mum about your day"
                 ]
             }
         },

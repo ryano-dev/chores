@@ -4,6 +4,8 @@
 const STORAGE_KEY = 'fridgeChoreApp_v1';
 const DEFAULT_PIN = '1234';
 const CHILDREN = ['Angus', 'Flynn', 'Ashton', 'Logan'];
+const correctSound = new Audio("correct.wav");
+const successSound = new Audio("success.wav");
 let choreMode = null; // "morning" or "afternoon"
 
 function getCurrentChoreMode() {
@@ -151,12 +153,24 @@ function toggleComplete(child, idx) {
         State.completed[key][child][mode] = [];
 
     const list = State.completed[key][child][mode];
-    const p = list.indexOf(idx);
+    const wasDone = list.includes(idx);
 
-    if (p === -1) list.push(idx);
-    else list.splice(p, 1);
+    // Toggle
+    if (!wasDone) list.push(idx);
+    else list.splice(list.indexOf(idx), 1);
 
     saveState(State);
+
+    // 🎉 Play success sound if ALL tasks completed (and ONLY when just finished)
+    const chores = State.kids[child][mode];
+    const nowDoneCount = list.length;
+    const total = chores.length;
+
+    if (!wasDone && nowDoneCount === total) {
+        successSound.currentTime = 0;
+        successSound.play().catch(() => {});
+    }
+
     renderKids();
 }
 
@@ -297,6 +311,8 @@ function renderKids() {
                 setTimeout(() => card.classList.remove("animate-pop"), 400);
 
                 if(!item.classList.contains('done')){
+                    correctSound.currentTime = 0;
+                    correctSound.play().catch(() => {});
                     showStarAnimation(item);
                     setTimeout(() => { toggleComplete(child, idx); }, 600); 
                 }

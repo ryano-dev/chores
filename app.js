@@ -169,6 +169,7 @@ function toggleComplete(child, idx) {
     if (!wasDone && nowDoneCount === total) {
         successSound.currentTime = 0;
         successSound.play().catch(() => {});
+        launchFireworks();
     }
 
     renderKids();
@@ -567,6 +568,39 @@ function showStarAnimation(parentElement) {
     setTimeout(() => {
         star.remove();
     }, 600);
+}
+
+function launchFireworks() {
+    const container = document.getElementById("fireworks");
+    if (!container) return;
+
+    // create 20 bursts
+    for (let i = 0; i < 20; i++) {
+        const f = document.createElement("div");
+        f.className = "firework";
+
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight * 0.7 + window.innerHeight * 0.1;
+
+        // random travel direction
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 120 + Math.random() * 80;
+
+        f.style.left = `${x}px`;
+        f.style.top = `${y}px`;
+
+        f.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
+        f.style.setProperty("--dy", `${Math.sin(angle) * distance}px`);
+
+        // random bright color
+        const colors = ["#ff4d4d", "#ffcc00", "#66ff66", "#66ccff", "#ff66ff"];
+        f.style.setProperty("--color", colors[Math.floor(Math.random() * colors.length)]);
+
+        container.appendChild(f);
+
+        // remove after animation
+        setTimeout(() => f.remove(), 1000);
+    }
 }
 
 (function init() {

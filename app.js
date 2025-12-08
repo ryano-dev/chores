@@ -253,6 +253,11 @@ function renderKids() {
         const doneList = State.completed[todayKey][child][mode] || [];
         const doneCount = doneList.length;
 
+        // Mark card as all done if child finished all chores
+        if (chores.length > 0 && doneCount === chores.length) {
+            card.classList.add("all-done");
+        }
+
         const progress = document.createElement('div');
         progress.className = 'progress';
         progress.textContent = `${doneCount} / ${chores.length}`;
@@ -285,7 +290,12 @@ function renderKids() {
 
             item.appendChild(check);
             item.appendChild(text);
-            item.addEventListener('click', () => {                 
+            item.addEventListener('click', () => {   
+                
+                // pop animation on parent card
+                card.classList.add("animate-pop");
+                setTimeout(() => card.classList.remove("animate-pop"), 400);
+
                 if(!item.classList.contains('done')){
                     showStarAnimation(item);
                     setTimeout(() => { toggleComplete(child, idx); }, 600); 

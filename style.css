@@ -334,7 +334,39 @@ section#lockSection[hidden] {
 
 
 
+/* --- Animate full card when a task is completed --- */
+.kid-card.animate-pop {
+    animation: cardPop 0.35s ease-out;
+}
 
+@keyframes cardPop {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.04);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* --- All tasks completed --- */
+.kid-card.all-done {
+    border: 2px solid #2ecc71;
+    box-shadow: 0 0 12px rgba(46, 204, 113, 0.6);
+    background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.05));
+}
+
+/* dark mode enhancement */
+    .kid-card.all-done {
+        opacity: 0.4;
+        border-color: #7dffb4;
+        box-shadow: 0 0 12px rgba(125, 255, 180, 0.6);
+        background: linear-gradient(135deg, rgba(125,255,180,0.12), rgba(60,255,160,0.07));
+    }
 
 
 

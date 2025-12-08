@@ -415,11 +415,68 @@ section#lockSection[hidden] {
     background: var(--color);
 }
 
+#wellDoneContainer {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    top: 0px;
+    display: none;
+}
+
+#wellDone {
+    font-size: 3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: linear-gradient( 90deg, red, orange, yellow, green, blue, indigo, violet );
+    background-size: 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow 3s linear infinite;
+}
+
+    #wellDone.popFade {
+        animation: popFade 2s ease forwards;
+    }
+
+
+
+/* Rainbow color shift */
+@keyframes rainbow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+@keyframes popFade {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    30% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    70% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
 
 
 
 /* --- DARK THEME OVERRIDES --- */
-
 body {
     background: #111;
     color: #eee;

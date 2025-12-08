@@ -173,13 +173,31 @@ function toggleComplete(child, idx) {
     const nowDoneCount = list.length;
     const total = chores.length;
 
+
     if (!wasDone && nowDoneCount === total) {
         successSound.currentTime = 0;
         successSound.play().catch(() => {});
         launchFireworks();
+        showWellDone(child);
     }
 
     renderKids();
+}
+
+function showWellDone(child){
+    const wellDoneContainer = document.getElementById('wellDoneContainer');
+    const wellDone = document.getElementById('wellDone');
+
+    wellDone.innerText = `Well done ${child}!`;
+    wellDoneContainer.style.display = 'flex';
+
+    wellDone.className = "popFade";
+
+    setTimeout(() => {
+        wellDone.className = "";
+        wellDoneContainer.style.display = 'none';
+    }, 3000);
+
 }
 
 // Admin: add/remove chores

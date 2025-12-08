@@ -4,6 +4,26 @@
 const STORAGE_KEY = 'fridgeChoreApp_v1';
 const DEFAULT_PIN = '1234';
 const CHILDREN = ['Angus', 'Flynn', 'Ashton', 'Logan'];
+let choreMode = null; // "morning" or "afternoon"
+
+function getCurrentChoreMode() {
+    if (choreMode) return choreMode; 
+    const hour = new Date().getHours();
+    return hour < 12 ? "morning" : "afternoon";
+}
+
+function setChoreMode(mode) {
+    choreMode = mode;
+    renderKids();
+}
+
+function updateHeaderTitle() {
+    const h1 = document.querySelector("header h1");
+    if (!h1) return;
+
+    const mode = getCurrentChoreMode();
+    h1.textContent = mode === "morning" ? "Morning Chores" : "Afternoon Chores";
+}
 
 function nowISO() { return new Date().toISOString(); }
 
@@ -22,52 +42,73 @@ function saveState(s) {
 
 function createDefaultState() {
     const state = {
-              "kids": {
-                "Angus": [
-                  "Make bed",
-                  "Tidy room",
-                  "Brush teeth & hair",
-                  "Dog water or Toilet rolls",
-                  "Pack bag"
+        kids: {
+            Angus: {
+                morning: [
+                    "Make bed",
+                    "Tidy room",
+                    "Brush teeth & hair",
+                    "Dog water or Toilet rolls",
+                    "Pack bag"
                 ],
-                "Flynn": [
-                  "Make bed",
-                  "Tidy room",
-                  "Brush teeth & hair",
-                  "Toilet rolls or dog water",
-                  "Pack bag"
-                ],
-                "Ashton": [
-                  "Make bed",
-                  "Tidy room & feed fish",
-                  "Brush teeth & hair",
-                  "Feed birds",
-                  "Pack dish washer",
-                  "Pack bag"
-                ],
-                "Logan": [
-                  "Make bed",
-                  "Tidy room",
-                  "Eat Breakfast",
-                  "Brush teeth & hair",
-                  "Make Mum cup of tea",
-                  "Empty dish washer",
-                  "Pack bag"
+                afternoon: [
+                    "Do some homework",
+                    "Empty your bag"
                 ]
-              },"completed": {
-                "2025-12-07": {
-                  "Angus": [],
-                  "Flynn": [],
-                  "Ashton": [],
-                  "Logan": []
-                }
-              },
-              "lastReset": "2025-12-07T11:12:22.319Z",
-              "pin": "1234"
-            };
+            },
+            Flynn: {
+                morning: [
+                    "Make bed",
+                    "Tidy room",
+                    "Brush teeth & hair",
+                    "Toilet rolls or dog water",
+                    "Pack bag"
+                ],
+                afternoon: [
+                    "Do some homework",
+                    "Empty your bag"
+                ]
+            },
+            Ashton: {
+                morning: [
+                    "Make bed",
+                    "Tidy room & feed fish",
+                    "Brush teeth & hair",
+                    "Feed birds",
+                    "Pack dish washer",
+                    "Pack bag"
+                ],
+                afternoon: [
+                    "Do some homework",
+                    "Feed dogs"
+                ]
+            },
+            Logan: {
+                morning: [
+                    "Make bed",
+                    "Tidy room",
+                    "Eat Breakfast",
+                    "Brush teeth & hair",
+                    "Make Mum cup of tea",
+                    "Empty dish washer",
+                    "Pack bag"
+                ],
+                afternoon: [
+                    "Do some homework",
+                    "Empty bins"
+                ]
+            }
+        },
+
+        completed: {},
+        lastReset: nowISO(),
+        pin: "1234"
+    };
+
     saveState(state);
     return state;
 }
+
 
 const State = loadState();
 
@@ -78,9 +119,16 @@ function dayKey(date = new Date()) {
 function ensureToday() {
     const key = dayKey();
     if (!State.completed[key]) State.completed[key] = {};
+
     CHILDREN.forEach(c => {
         if (!State.completed[key][c])
-            State.completed[key][c] = [];
+            State.completed[key][c] = { morning: [], afternoon: [] };
+
+        if (!State.completed[key][c].morning)
+            State.completed[key][c].morning = [];
+
+        if (!State.completed[key][c].afternoon)
+            State.completed[key][c].afternoon = [];
     });
 }
 
@@ -97,10 +145,17 @@ function checkAutoReset() {
 function toggleComplete(child, idx) {
     const key = dayKey();
     ensureToday();
-    const list = State.completed[key][child];
+    const mode = getCurrentChoreMode();
+
+    if (!State.completed[key][child][mode])
+        State.completed[key][child][mode] = [];
+
+    const list = State.completed[key][child][mode];
     const p = list.indexOf(idx);
+
     if (p === -1) list.push(idx);
     else list.splice(p, 1);
+
     saveState(State);
     renderKids();
 }
@@ -160,6 +215,9 @@ function importJSON(file) {
 
 // Rendering (index.html)
 function renderKids() {
+    updateHeaderTitle();
+
+
     const container = document.getElementById('kidsContainer');
     if (!container) return;
     container.innerHTML = '';
@@ -190,10 +248,10 @@ function renderKids() {
         nameWrap.appendChild(photo);
         nameWrap.appendChild(name);
 
-
-        const chores = State.kids[child] || [];
-        const doneCount = (State.completed[todayKey] && State.completed[todayKey][child])
-            ? State.completed[todayKey][child].length : 0;
+        const mode = getCurrentChoreMode();
+        const chores = State.kids[child][mode] || [];
+        const doneList = State.completed[todayKey][child][mode] || [];
+        const doneCount = doneList.length;
 
         const progress = document.createElement('div');
         progress.className = 'progress';
@@ -211,7 +269,7 @@ function renderKids() {
         chores.forEach((t, idx) => {
             const item = document.createElement('div');
             item.className = 'task';
-            const done = (State.completed[todayKey][child].indexOf(idx) !== -1);
+            const done = doneList.indexOf(idx) !== -1;
             if (done) item.classList.add('done');
 
             item.dataset.child = child;
@@ -252,16 +310,12 @@ function setupIndexPage() {
     const dateEl = document.getElementById('date');
     if (dateEl) dateEl.textContent = (new Date()).toLocaleString();
 
-    const lastReset = document.getElementById('lastReset');
-    if (lastReset) lastReset.textContent = 'Last reset: ' + (new Date(State.lastReset)).toLocaleString();
-
-    const resetNow = document.getElementById('resetNow');
-    if (resetNow) resetNow.addEventListener('click', () => {
-        State.lastReset = nowISO();
-        ensureToday();
-        saveState(State);
-        renderKids();
-        alert('Reset for today');
+    const toggleBtn = document.getElementById('toggleModeBtn');
+    toggleBtn.addEventListener('click', () => {
+        const mode = getCurrentChoreMode();
+        setChoreMode(mode === "morning" ? "afternoon" : "morning");
+        toggleBtn.textContent = mode === "morning" ? "Show Morning" : "Show Afternoon";
+        updateHeaderTitle();
     });
 
     renderKids();
@@ -318,22 +372,32 @@ function setupAdminPage() {
 }
 
 function populateAdmin() {
-    const sel = document.getElementById('childSelect');
-    sel.innerHTML = '';
+    const childSelect = document.getElementById('childSelect');
+    const modeSelect = document.getElementById('modeSelect');
+
+    // Populate children
+    childSelect.innerHTML = '';
     CHILDREN.forEach(c => {
-        const o = document.createElement('option');
-        o.value = c;
-        o.textContent = c;
-        sel.appendChild(o);
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        childSelect.appendChild(opt);
     });
 
-    sel.addEventListener('change', renderTaskListAdmin);
+    // Change listeners
+    childSelect.addEventListener('change', renderTaskListAdmin);
+    modeSelect.addEventListener('change', renderTaskListAdmin);
 
+    // Add task button
     document.getElementById('addTaskBtn').addEventListener('click', () => {
-        const child = sel.value;
+        const child = childSelect.value;
+        const mode = modeSelect.value;
         const txt = document.getElementById('newTaskInput').value.trim();
         if (!txt) return;
-        addChore(child, txt);
+
+        State.kids[child][mode].push(txt);
+        saveState(State);
+
         document.getElementById('newTaskInput').value = '';
         renderTaskListAdmin();
     });
@@ -343,13 +407,17 @@ function populateAdmin() {
 
 function renderTaskListAdmin() {
     const child = document.getElementById('childSelect').value;
+    const mode = document.getElementById('modeSelect').value;
     const list = document.getElementById('taskList');
+
     list.innerHTML = '';
 
-    const chores = State.kids[child] || [];
+    const chores = State.kids[child][mode] || [];
+
     chores.forEach((t, idx) => {
         const row = document.createElement('div');
         row.className = 'task admin-row';
+
         const txt = document.createElement('div');
         txt.textContent = t;
         txt.style.flex = '1';
@@ -357,14 +425,28 @@ function renderTaskListAdmin() {
         const btn = document.createElement('button');
         btn.textContent = 'Delete';
         btn.addEventListener('click', () => {
-            if (confirm('Delete this chore?')) {
-                removeChore(child, idx);
-                renderTaskListAdmin();
-            }
+            if (!confirm('Delete this chore?')) return;
+
+            // Remove from kids
+            State.kids[child][mode].splice(idx, 1);
+
+            // Fix completion records for this mode
+            Object.keys(State.completed).forEach(day => {
+                const list = State.completed[day][child][mode] || [];
+                const updated = list
+                    .filter(i => i !== idx)
+                    .map(i => i > idx ? i - 1 : i);
+
+                State.completed[day][child][mode] = updated;
+            });
+
+            saveState(State);
+            renderTaskListAdmin();
         });
 
         row.appendChild(txt);
         row.appendChild(btn);
+
         list.appendChild(row);
     });
 }

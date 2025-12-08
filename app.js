@@ -89,7 +89,6 @@ function createDefaultState() {
                 morning: [
                     "Make bed",
                     "Tidy room",
-                    "Eat Breakfast",
                     "Brush teeth & hair",
                     "Make Mum cup of tea",
                     "Empty dish washer",

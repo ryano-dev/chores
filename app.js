@@ -331,23 +331,92 @@ function setupAdminPage() {
     const backBtn = document.getElementById('backBtn');
     if (backBtn) backBtn.addEventListener('click', () => window.location = 'index.html');
 
-    const pinInput = document.getElementById('pinInput');
+    // New keypad / PIN handling
+    const pinDisplay = document.getElementById('pinDisplay');
     const unlockBtn = document.getElementById('unlockBtn');
     const lockMsg = document.getElementById('lockMsg');
+    const keypad = document.getElementById('keypad');
+    const kpBack = document.getElementById('kp-back');
+    const kpClear = document.getElementById('kp-clear');
+    const kpClose = document.getElementById('kp-close');
     const panel = document.getElementById('adminPanel');
 
+    // internal buffer for pin entry (string)
+    let pinBuffer = '';
+
+    function refreshPinDisplay() {
+        // show dots for entered digits, up to 8
+        const max = 8;
+        const dots = '•'.repeat(pinBuffer.length) + '○'.repeat(Math.max(0, 4 - pinBuffer.length));
+        // use minimalistic display — you can change how many empties shown
+        if (pinDisplay) pinDisplay.textContent = dots;
+    }
+
+    function appendDigit(d) {
+        if (pinBuffer.length >= 8) return;
+        pinBuffer += String(d);
+        refreshPinDisplay();
+    }
+
+    function backspacePin() {
+        if (!pinBuffer) return;
+        pinBuffer = pinBuffer.slice(0, -1);
+        refreshPinDisplay();
+    }
+
+    function clearPin() {
+        pinBuffer = '';
+        refreshPinDisplay();
+    }
+
+    // Click handlers for numeric keys
+    if (keypad) {
+        keypad.addEventListener('click', (ev) => {
+            const btn = ev.target.closest('button');
+            if (!btn) return;
+            const k = btn.dataset.key;
+            if (k !== undefined) {
+                appendDigit(k);
+            }
+        });
+    }
+
+    if (kpBack) kpBack.addEventListener('click', backspacePin);
+    if (kpClear) kpClear.addEventListener('click', clearPin);
+
+    // Cancel simply clears and returns to index (or hides keypad)
+    if (kpClose) kpClose.addEventListener('click', () => {
+        clearPin();
+        // navigate back to index for convenience
+        window.location = 'index.html';
+    });
+
+    // Unlock button uses the pinBuffer
     unlockBtn.addEventListener('click', () => {
-        const val = pinInput.value || '';
+        const val = String(pinBuffer || '');
         if (val === State.pin) {
             panel.hidden = false;
             document.getElementById('lockSection').hidden = true;
             populateAdmin();
+            clearPin();
+            lockMsg.textContent = '';
         } else {
             lockMsg.textContent = 'Incorrect PIN';
+            // small shake / visual hint
+            const el = document.getElementById('lockSection');
+            if (el) {
+                el.animate([
+                    { transform: 'translateX(-6px)' },
+                    { transform: 'translateX(6px)' },
+                    { transform: 'translateX(0)' }
+                ], { duration: 250 });
+            }
             setTimeout(() => lockMsg.textContent = '', 2000);
+            clearPin();
         }
     });
 
+    // keep existing export/import/wipe handlers (they reference DOM ids already present)
     document.getElementById('exportBtn').addEventListener('click', exportJSON);
     document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
     document.getElementById('importFile').addEventListener('change', e => {
@@ -369,6 +438,9 @@ function setupAdminPage() {
             location.href = "index.html";
         }
     });
+
+    // initialise display
+    refreshPinDisplay();
 }
 
 function populateAdmin() {

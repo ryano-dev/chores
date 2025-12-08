@@ -15,10 +15,38 @@
 
 
         <section id="lockSection">
-            <label for="pinInput">Enter PIN</label>
-            <input id="pinInput" type="password" inputmode="numeric" maxlength="8" />
-            <button id="unlockBtn">Unlock</button>
-            <div id="lockMsg" class="note"></div>
+            <div style="margin-bottom:8px">
+                <label for="pinDisplay">Enter PIN</label>
+                <div id="pinDisplay" class="pin-display" aria-live="polite">●●●●</div>
+                <div id="lockMsg" class="note" style="min-height:1.2em"></div>
+            </div>
+
+            <div id="keypad" class="keypad" role="group" aria-label="Numeric keypad">
+                <!-- Row 1 -->
+                <button class="kp-btn" data-key="1">1</button>
+                <button class="kp-btn" data-key="2">2</button>
+                <button class="kp-btn" data-key="3">3</button>
+
+                <!-- Row 2 -->
+                <button class="kp-btn" data-key="4">4</button>
+                <button class="kp-btn" data-key="5">5</button>
+                <button class="kp-btn" data-key="6">6</button>
+
+                <!-- Row 3 -->
+                <button class="kp-btn" data-key="7">7</button>
+                <button class="kp-btn" data-key="8">8</button>
+                <button class="kp-btn" data-key="9">9</button>
+
+                <!-- Row 4 -->
+                <button class="kp-action" id="kp-clear">C</button>
+                <button class="kp-btn" data-key="0">0</button>
+                <button class="kp-action" id="kp-back">⌫</button>
+            </div>
+
+            <div style="margin-top:10px; display:flex; gap:8px;">
+                <button id="unlockBtn">Unlock</button>
+                <button id="kp-close">Cancel</button>
+            </div>
         </section>
 
 

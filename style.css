@@ -194,6 +194,107 @@ button {
 }
 
 
+
+section#lockSection[hidden] {
+    display: none;
+}
+
+/* Keypad / PIN display */
+.pin-display {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.08);
+    width: 150px;
+    text-align: center;
+    margin-top: 6px;
+    letter-spacing: 8px;
+    background: #fff;
+    color: #111;
+}
+
+/* Keypad grid */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 64px);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.kp-btn, .kp-action {
+    padding: 12px 0;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* action style (backspace / clear) */
+.kp-action {
+    background: #f3f3f3;
+}
+
+    /* small touch target improvements */
+    .kp-btn:active, .kp-action:active {
+        transform: translateY(1px);
+    }
+
+/* Dark theme compatible */
+.pin-display {
+    background: #222;
+    color: #eee;
+    border: 1px solid #333;
+}
+
+.kp-btn, .kp-action {
+    background: #222;
+    color: #eee;
+    border: 1px solid #333;
+}
+
+/* Center the lock section on admin page */
+#lockSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+    #lockSection > * {
+        text-align: center;
+    }
+
+/* Make the keypad centered too */
+#keypad {
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#pinDisplay {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @media (max-width:520px) {
     header h1 {
         font-size: 18px

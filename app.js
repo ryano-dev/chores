@@ -176,8 +176,8 @@ function toggleComplete(child, idx) {
 
     if (!wasDone && nowDoneCount === total) {
         successSound.currentTime = 0;
-        successSound.play().catch(() => {});
-        launchFireworks();
+        successSound.play().catch(() => { });
+        launchFireworkFinale();
         showWellDone(child);
     }
 
@@ -595,37 +595,63 @@ function showStarAnimation(parentElement) {
     }, 600);
 }
 
-function launchFireworks() {
+function launchFireworkFinale() {
+    // 4–6 rockets
+    const count = 4 + Math.floor(Math.random() * 3);
+
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => launchRisingFirework(), i * 250);
+    }
+}
+
+function launchRisingFirework() {
     const container = document.getElementById("fireworks");
     if (!container) return;
 
-    // create 20 bursts
-    for (let i = 0; i < 20; i++) {
-        const f = document.createElement("div");
-        f.className = "firework";
+    // Random start (bottom screen)
+    const startX = Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1;
+    const startY = window.innerHeight - 40;
 
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight * 0.7 + window.innerHeight * 0.1;
+    // Rocket element
+    const rocket = document.createElement("div");
+    rocket.className = "firework-rocket";
+    rocket.style.left = `${startX}px`;
+    rocket.style.top = `${startY}px`;
 
-        // random travel direction
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 120 + Math.random() * 80;
+    container.appendChild(rocket);
 
-        f.style.left = `${x}px`;
-        f.style.top = `${y}px`;
+    // After rocket rises, explode
+    setTimeout(() => {
+        rocket.remove();
 
-        f.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
-        f.style.setProperty("--dy", `${Math.sin(angle) * distance}px`);
+        const explosionX = startX;
+        const explosionY = startY - 200; // matches rocketRise distance
 
-        // random bright color
-        const colors = ["#ff4d4d", "#ffcc00", "#66ff66", "#66ccff", "#ff66ff"];
-        f.style.setProperty("--color", colors[Math.floor(Math.random() * colors.length)]);
+        // Create sparks
+        const sparkCount = 24;
+        const colors = ["#ff4d4d", "#ffd11a", "#66ff66", "#66ccff", "#ff66ff"];
 
-        container.appendChild(f);
+        for (let i = 0; i < sparkCount; i++) {
+            const spark = document.createElement("div");
+            spark.className = "spark";
 
-        // remove after animation
-        setTimeout(() => f.remove(), 1000);
-    }
+            spark.style.left = `${explosionX}px`;
+            spark.style.top = `${explosionY}px`;
+
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 80 + Math.random() * 70;
+
+            spark.style.setProperty("--dx", `${Math.cos(angle) * speed}px`);
+            spark.style.setProperty("--dy", `${Math.sin(angle) * speed}px`);
+
+            spark.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            container.appendChild(spark);
+
+            setTimeout(() => spark.remove(), 1200);
+        }
+
+    }, 900); // matches rocketRise animation length
 }
 
 (function init() {

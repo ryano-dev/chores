@@ -371,7 +371,7 @@ section#lockSection[hidden] {
 
 
 
-/* --- FIREWORKS OVERLAY --- */
+/* --- FULLSCREEN FIREWORKS --- */
 #fireworks {
     position: fixed;
     top: 0;
@@ -383,19 +383,47 @@ section#lockSection[hidden] {
     z-index: 9999;
 }
 
-/* individual firework burst */
-.firework {
+/* Rocket (rising streak) */
+.firework-rocket {
     position: absolute;
-    width: 50px;
-    height: 50px;
-    background: transparent;
-    border-radius: 50%;
-    animation: fireworkBurst 1s ease-out forwards;
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+    background: linear-gradient(to top, #ffdd55, #ffffff);
+    opacity: 0.9;
+    animation: rocketRise 0.9s ease-out forwards;
 }
 
-@keyframes fireworkBurst {
+@keyframes rocketRise {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-200px);
+        opacity: 0.3;
+    }
+}
+
+/* Explosion spark */
+.spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkFly 1s ease-out forwards;
+}
+
+/* Sparks travel outward from explosion point */
+@keyframes sparkFly {
     0% {
         transform: translate(0,0) scale(1);
+        opacity: 1;
+    }
+
+    70% {
         opacity: 1;
     }
 
@@ -405,15 +433,6 @@ section#lockSection[hidden] {
     }
 }
 
-/* different colors */
-.firework::before {
-    content: "";
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--color);
-}
 
 #wellDoneContainer {
     height: 100%;

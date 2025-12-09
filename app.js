@@ -283,6 +283,10 @@ function renderKids() {
         const photo = document.createElement('img');
         photo.src = child + '.jpg';
         photo.className = 'kid-photo';
+        photo.addEventListener('error', (e) => {
+            e.target.style.visibility = 'hidden';
+            e.target.style.width = '1px';
+        });
 
 
         const nameWrap = document.createElement('div');

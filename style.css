@@ -193,7 +193,15 @@ button {
     color: #fff
 }
 
+#adminPanel {
+    max-width: 600px;
+    margin: 10px auto;
+}
 
+hr {
+    margin: 50px 0;
+    border-color: #444;
+}
 
 section#lockSection[hidden] {
     display: none;

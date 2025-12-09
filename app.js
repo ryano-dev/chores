@@ -2,11 +2,13 @@
 'use strict';
 
 const STORAGE_KEY = 'fridgeChoreApp_v1';
-const DEFAULT_PIN = '1234';
-const CHILDREN = ['Angus', 'Flynn', 'Ashton', 'Logan'];
 const correctSound = new Audio("correct.wav");
 const successSound = new Audio("success.wav");
 let choreMode = null; // "morning" or "afternoon"
+
+function getChildren() {
+    return Object.keys(State.kids);
+}
 
 function getCurrentChoreMode() {
     if (choreMode) return choreMode; 
@@ -129,7 +131,7 @@ function ensureToday() {
     const key = dayKey();
     if (!State.completed[key]) State.completed[key] = {};
 
-    CHILDREN.forEach(c => {
+    getChildren().forEach(c => {
         if (!State.completed[key][c])
             State.completed[key][c] = { morning: [], afternoon: [] };
 
@@ -264,7 +266,7 @@ function renderKids() {
     ensureToday();
     const todayKey = dayKey();
 
-    CHILDREN.forEach(child => {
+    getChildren().forEach(child => {
         const card = document.createElement('section');
         card.className = 'kid-card';
 
@@ -495,13 +497,79 @@ function setupAdminPage() {
     refreshPinDisplay();
 }
 
+function addChild(name) {
+    name = name.trim();
+    if (!name || getChildren().includes(name)) return;
+
+    getChildren().push(name);
+
+    State.kids[name] = {
+        morning: [],
+        afternoon: []
+    };
+
+    // Add to every saved day
+    Object.keys(State.completed).forEach(day => {
+        State.completed[day][name] = { morning: [], afternoon: [] };
+    });
+
+    saveState(State);
+}
+
+function removeChild(name) {
+    const idx = getChildren().indexOf(name);
+    if (idx === -1) return;
+
+    getChildren().splice(idx, 1);
+
+    delete State.kids[name];
+
+    // remove historical completions
+    Object.keys(State.completed).forEach(day => {
+        delete State.completed[day][name];
+    });
+
+    saveState(State);
+}
+
+function renderChildList() {
+    const list = document.getElementById("childList");
+    list.innerHTML = "";
+
+    getChildren().forEach(child => {
+        const row = document.createElement("div");
+        row.className = "task admin-row";
+
+        let txt = document.createElement("div");
+        txt.textContent = child;
+        txt.style.flex = "1";
+
+        let del = document.createElement("button");
+        del.textContent = "Delete";
+
+        del.addEventListener("click", () => {
+            if (!confirm(`Delete ${child}? All chores & history will be removed.`)) return;
+
+            removeChild(child);
+            renderChildList();
+            populateAdmin(); // refresh dropdowns
+        });
+
+        row.appendChild(txt);
+        row.appendChild(del);
+
+        list.appendChild(row);
+    });
+}
+
+
 function populateAdmin() {
     const childSelect = document.getElementById('childSelect');
     const modeSelect = document.getElementById('modeSelect');
 
     // Populate children
     childSelect.innerHTML = '';
-    CHILDREN.forEach(c => {
+    getChildren().forEach(c => {
         const opt = document.createElement('option');
         opt.value = c;
         opt.textContent = c;
@@ -526,7 +594,20 @@ function populateAdmin() {
         renderTaskListAdmin();
     });
 
+    // Add child
+    document.getElementById("addChildBtn").addEventListener("click", () => {
+        const name = document.getElementById("newChildInput").value.trim();
+        if (!name) return;
+
+        addChild(name);
+        document.getElementById("newChildInput").value = "";
+
+        renderChildList();
+        populateAdmin(); // refresh dropdown
+    });
+
     renderTaskListAdmin();
+    renderChildList();
 }
 
 function renderTaskListAdmin() {

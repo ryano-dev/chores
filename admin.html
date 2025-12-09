@@ -51,36 +51,49 @@
 
 
         <section id="adminPanel" hidden>
+
+
+            <h1>Children</h1>
+
+            <div id="childList" class="task-list" style="margin-top:10px;"></div>
             <div class="row">
-                <label for="childSelect">Select child</label>
-                <select id="childSelect"></select>
+                <input id="newChildInput" placeholder="Child name" />
+                <button id="addChildBtn">Add Child</button>
             </div>
 
+
+            <hr />
+            <h1>Tasks</h1>
+
             <div class="row">
-                <label for="modeSelect">Chore time</label>
+                <select id="childSelect"></select>
                 <select id="modeSelect">
                     <option value="morning">Morning</option>
                     <option value="afternoon">Afternoon</option>
                 </select>
             </div>
 
+
+
+            <div id="taskList" class="task-list"></div>
             <div class="row">
-                <label for="newTaskInput">New chore (press Add)</label>
+                <label for="newTaskInput">New chore:</label>
                 <input id="newTaskInput" placeholder="e.g. Make bed" />
                 <button id="addTaskBtn">Add</button>
             </div>
 
 
-            <div id="taskList" class="task-list"></div>
-
-
             <hr />
+            <h1>PIN</h1>
+
             <div class="row">
                 <label for="pinSet">Change PIN</label>
                 <input id="pinSet" type="password" maxlength="8" />
                 <button id="setPinBtn">Set PIN</button>
             </div>
 
+            <hr />
+            <h1>Data</h1>
 
             <div class="row">
                 <button id="exportBtn">Export Data (JSON)</button>
@@ -88,9 +101,11 @@
                 <input type="file" id="importFile" accept="application/json" style="display:none" />
             </div>
 
+            <hr />
+            <h1>Danger</h1>
 
             <div class="row">
-                <button id="wipeBtn" class="danger">Wipe All Data</button>
+                <button id="wipeBtn" class="danger">Wipe All Data...</button>
             </div>
         </section>
 
